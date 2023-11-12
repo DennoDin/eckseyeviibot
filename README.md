@@ -4,7 +4,7 @@ A discord bot for personal use my XIV raid group
 ## Running Locally
 ### Start bot
 ```
-py -3 .\eckseyevii_bot.py
+py -3 .\main_script.py
 ```
 
 ## Commands
