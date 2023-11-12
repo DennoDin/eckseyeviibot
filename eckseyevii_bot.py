@@ -7,7 +7,7 @@ load_dotenv()
 intents = discord.Intents.default()
 intents.message_content = True
 
-raid_role_call_message = 'This is our role call for the next gathering.\nPlease react with your role if you\'re able to join us, a question mark if you\'re unsure, or a X if you cannot.'
+raid_role_call_message = 'This roll call for the next raid day.\nPlease react with your role if you\'re able to join us, a :question:if you\'re unsure, or a :x:if you cannot.'
 
 client = discord.Client(intents=intents)
 
@@ -21,6 +21,11 @@ async def on_message(message):
         return
 
     if message.content.startswith('$roll-call'):
-        await message.channel.send(raid_role_call_message)
+        message_parts = message.content.split('!');
+        print(f'LOG: Roll call executed by {message.author}')
+        if(len(message_parts) > 1):
+            await message.channel.send(raid_role_call_message)
+        else:
+            await message.channel.send(raid_role_call_message)
 
 client.run(os.getenv("BOT_TOKEN"))
