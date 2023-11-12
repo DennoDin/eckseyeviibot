@@ -23,9 +23,11 @@ async def on_message(message):
     if message.content.startswith('$roll-call'):
         message_parts = message.content.split('!');
         print(f'LOG: Roll call executed by {message.author}')
-        if(len(message_parts) > 1):
+        if(len(message_parts) == 2):
+            print(f'LOG: Roll call with time sent')
             await message.channel.send(raid_role_call_message)
         else:
+            print(f'LOG: Default roll call message sent')
             await message.channel.send(raid_role_call_message)
 
 client.run(os.getenv("BOT_TOKEN"))
