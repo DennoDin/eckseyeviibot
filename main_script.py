@@ -2,6 +2,7 @@ import discord
 import os
 from dotenv import load_dotenv
 from main_strings import roll_call_dict, log_dict
+from commands import commands_dict
 
 load_dotenv()
 
@@ -19,17 +20,13 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('$roll-call'):
-        message_parts = message.content.split('!');
-        message_parts = [word.strip() for word in message_parts]
-        print(f'{log_dict["roll_call_executed"].format(message.author)}')
-        if(len(message_parts) == 2):
-            print(f'{log_dict["roll_call_with_time"]}')
-            roll_call_message = roll_call_dict["base"] + roll_call_dict["time"].format(message_parts[1]) + roll_call_dict["react"]
-            await message.channel.send(roll_call_message)
-        else:
-            print(f'{log_dict["roll_call_default"]}')
-            roll_call_message = roll_call_dict["base"] + roll_call_dict["react"]
-            await message.channel.send(roll_call_message)
+    if message.content.startswith('$'):
 
+        split_message = message.content.split('$')
+        split_message = [word.strip() for word in split_message]
+        split_message = split_message[1:]
+
+        if split_message[0] == 'rollcall':
+            await commands_dict['rollcall'](message.author, message.channel, split_message)
+        
 client.run(os.getenv("BOT_TOKEN"))
