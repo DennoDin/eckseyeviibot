@@ -6,6 +6,8 @@ from commands import commands_dict
 
 load_dotenv()
 
+admin_role_id = int(os.getenv("LEAD_ROLE_ID"))
+
 intents = discord.Intents.default()
 intents.message_content = True
 
@@ -19,6 +21,10 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
+
+    has_role = [role for role in message.author.roles if role.id == admin_role_id];
+    if(len(has_role) > 0):
+        print(f'Role Found')
 
     if message.content.startswith('$'):
 
