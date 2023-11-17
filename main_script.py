@@ -1,38 +1,39 @@
 import discord
+from discord.ext import commands
 import os
 from dotenv import load_dotenv
-from commands import commands_dict
+from messages import bot as bot_messages, log as log_messages
 
 load_dotenv()
 
-admin_role_id = int(os.getenv("LEAD_ROLE_ID"))
-
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
 
-client = discord.Client(intents=intents)
+bot = commands.Bot(command_prefix='$', intents=intents)
 
-@client.event
+@bot.event
 async def on_ready():
-    print(f'We have logged in as {client.user}')
+    print(f'Logged in as {bot.user.name}')
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
+@bot.command()
+async def setAdminRole(ctx, arg):
+    if(ctx.author == ctx.guild.owner):
+        admin_name = arg.strip()
+        os.environ["LEAD_ROLE_NAME"] = admin_name
+        print(log_messages.admin['set_admin_tag'].format(admin_name))
+        await ctx.send(log_messages.admin['set_admin_tag'].format(admin_name))
+    else:
+        await ctx.send(bot_messages.forbidden['owner'].format(ctx.guild.owner))
+
+@bot.command()
+async def rollcall(ctx, *arg):
+    admin_role = discord.utils.get(ctx.guild.roles, name=os.getenv("LEAD_ROLE_NAME"))
+    if ctx.author == bot.user or (admin_role and admin_role not in ctx.author.roles) :
         return
 
-    if message.content.startswith(os.getenv("SEPARATOR")):
-        has_role = [role for role in message.author.roles if role.id == admin_role_id];
-        if(len(has_role) > 0):
-            print(f'Role Found')
+    if len(arg) == 0:
+        content = bot_messages.rollcall['base'] + bot_messages.rollcall['react']
+        message = await ctx.send(content)
 
-        split_message = message.content.split(os.getenv("SEPARATOR"))
-        split_message = [word.strip() for word in split_message]
-        
-        commandStr = split_message[1]
-        commandArgs = split_message[2:]
-
-        if commandStr in commands_dict:
-            await commands_dict[commandStr](message.author, message.channel, commandArgs)
-        
-client.run(os.getenv("BOT_TOKEN"))
+bot.run(os.getenv("BOT_TOKEN"))
