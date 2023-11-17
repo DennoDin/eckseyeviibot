@@ -1,4 +1,4 @@
-roll_call_dict = {
+rollcall_dict = {
     "base":  "This roll call for our next raid day.",
     "time":  " We've scheduled it for <t:{}>",
     "react": "\nPlease react with your role if you\'re able to join us, a :question:if you\'re unsure, or a :x:if you cannot.",

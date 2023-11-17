@@ -1,18 +1,18 @@
 from main_strings import log_dict, rollcall_dict, separator_dict
 import os
 
-async def rollcall(author, channel, message_parts):
+async def rollcall(author, channel, arguments):
     print(f'{log_dict["roll_call_executed"].format(author)}')
 
-    if(len(message_parts) == 2):
+    if(len(arguments) == 1):
         print(f'{log_dict["roll_call_with_time"]}')
-        roll_call_message = roll_call_dict["base"] + roll_call_dict["time"].format(message_parts[1]) + roll_call_dict["react"]
-        await channel.send(roll_call_message)
-        
+        message = rollcall_dict["base"] + rollcall_dict["time"].format(arguments[0]) + rollcall_dict["react"]
+        await channel.send(message)
+
     else:
         print(f'{log_dict["roll_call_default"]}')
-        roll_call_message = roll_call_dict["base"] + roll_call_dict["react"]
-        await channel.send(roll_call_message)
+        message = rollcall_dict["base"] + rollcall_dict["react"]
+        await channel.send(message)
 
 async def separator(author, channel, arguments):
     if len(arguments) < 1:
