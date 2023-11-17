@@ -1,4 +1,5 @@
 from main_strings import log_dict, rollcall_dict, separator_dict
+from emoji import emoji_dict
 import os
 
 async def rollcall(author, channel, arguments):
@@ -6,13 +7,19 @@ async def rollcall(author, channel, arguments):
 
     if(len(arguments) == 1):
         print(f'{log_dict["roll_call_with_time"]}')
-        message = rollcall_dict["base"] + rollcall_dict["time"].format(arguments[0]) + rollcall_dict["react"]
-        await channel.send(message)
+        content = rollcall_dict["base"] + rollcall_dict["time"].format(arguments[0]) + rollcall_dict["react"]
+        message = await channel.send(content)
+        await add_role_reactions(message)
 
     else:
         print(f'{log_dict["roll_call_default"]}')
-        message = rollcall_dict["base"] + rollcall_dict["react"]
-        await channel.send(message)
+        content = rollcall_dict["base"] + rollcall_dict["react"]
+        message = await channel.send(content)
+        await add_role_reactions(message)
+
+async def add_role_reactions(message):
+    await message.add_reaction(emoji_dict['?'])
+    await message.add_reaction(emoji_dict['x'])
 
 async def separator(author, channel, arguments):
     if len(arguments) < 1:
