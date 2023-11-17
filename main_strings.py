@@ -4,6 +4,10 @@ roll_call_dict = {
     "react": "\nPlease react with your role if you\'re able to join us, a :question:if you\'re unsure, or a :x:if you cannot.",
 }
 
+separator_dict = {
+    "get": "The current separator is: {}",
+}
+
 log_dict = {
     "roll_call_executed": "LOG: Roll call executed by {}",
     "roll_call_default":  "LOG: Default roll call message sent",
