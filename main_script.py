@@ -31,9 +31,11 @@ async def on_message(message):
 
         split_message = message.content.split('$')
         split_message = [word.strip() for word in split_message]
-        split_message = split_message[1:]
+        
+        commandStr = split_message[1]
+        commandArgs = split_message[2:]
 
-        if split_message[0] == 'rollcall':
-            await commands_dict['rollcall'](message.author, message.channel, split_message)
+        if commandStr in commands_dict:
+            await commands_dict[commandStr](message.author, message.channel, commandArgs)
         
 client.run(os.getenv("BOT_TOKEN"))
