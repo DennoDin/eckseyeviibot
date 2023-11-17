@@ -7,6 +7,7 @@ from commands import commands_dict
 load_dotenv()
 
 admin_role_id = int(os.getenv("LEAD_ROLE_ID"))
+separator = os.getenv("SEPARATOR");
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -26,7 +27,7 @@ async def on_message(message):
     if(len(has_role) > 0):
         print(f'Role Found')
 
-    if message.content.startswith('$'):
+    if message.content.startswith(separator):
 
         split_message = message.content.split('$')
         split_message = [word.strip() for word in split_message]
