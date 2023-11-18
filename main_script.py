@@ -38,7 +38,14 @@ async def rollcall(ctx, *arg):
         message = await ctx.send(content)
         await rollcall_react(message)
 
+async def get_emojis():
+    guild = bot.get_guild(int(os.getenv("BOT_GUILD")))
+    return [discord.utils.get(guild.emojis, name=emoji_name) for emoji_name in bot_messages.custom_emojis.values()]
+
 async def rollcall_react(message):
+    available_emojis = await get_emojis();
+    for custom_emoji in available_emojis:
+        await message.add_reaction(custom_emoji)
     await message.add_reaction(emoji.question())
     await message.add_reaction(emoji.x())
 
