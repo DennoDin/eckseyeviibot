@@ -3,6 +3,7 @@ from discord.ext import commands
 import os
 from dotenv import load_dotenv
 from messages import bot as bot_messages, log as log_messages
+import emoji
 
 load_dotenv()
 
@@ -35,5 +36,10 @@ async def rollcall(ctx, *arg):
     if len(arg) == 0:
         content = bot_messages.rollcall['base'] + bot_messages.rollcall['react']
         message = await ctx.send(content)
+        await rollcall_react(message)
+
+async def rollcall_react(message):
+    await message.add_reaction(emoji.question())
+    await message.add_reaction(emoji.x())
 
 bot.run(os.getenv("BOT_TOKEN"))

@@ -1,4 +1,5 @@
-emoji_dict =  {
-    "x": '\u274C',
-    "?": '\u2753',
-}
+def x():
+    return '\u274C'
+
+def question():
+    return '\u2753'
