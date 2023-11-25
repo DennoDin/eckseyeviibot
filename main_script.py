@@ -13,9 +13,15 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='$', intents=intents)
 
+role_emojis = []
+
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user.name}')
+
+    guild = bot.get_guild(int(os.getenv("BOT_GUILD")))
+    global role_emojis
+    role_emojis = [discord.utils.get(guild.emojis, name=emoji_name) for emoji_name in bot_messages.custom_emojis.values()]
 
 @bot.command()
 async def setAdminRole(ctx, arg):
@@ -38,13 +44,8 @@ async def rollcall(ctx, *arg):
         message = await ctx.send(content)
         await rollcall_react(message)
 
-async def get_emojis():
-    guild = bot.get_guild(int(os.getenv("BOT_GUILD")))
-    return [discord.utils.get(guild.emojis, name=emoji_name) for emoji_name in bot_messages.custom_emojis.values()]
-
 async def rollcall_react(message):
-    available_emojis = await get_emojis();
-    for custom_emoji in available_emojis:
+    for custom_emoji in role_emojis:
         await message.add_reaction(custom_emoji)
     await message.add_reaction(emoji.question())
     await message.add_reaction(emoji.x())
