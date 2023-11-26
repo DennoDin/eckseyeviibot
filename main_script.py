@@ -13,6 +13,7 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='$', intents=intents)
 
+authorized_roles = {}
 role_emojis = []
 
 @bot.event
@@ -27,7 +28,8 @@ async def on_ready():
 async def setAdminRole(ctx, arg):
     if(ctx.author == ctx.guild.owner):
         admin_name = arg.strip()
-        os.environ["LEAD_ROLE_NAME"] = admin_name
+        global authorized_roles
+        authorized_roles[ctx.guild.id] = admin_name
         print(log_messages.admin['set_admin_tag'].format(admin_name))
         await ctx.send(log_messages.admin['set_admin_tag'].format(admin_name))
     else:
@@ -35,14 +37,25 @@ async def setAdminRole(ctx, arg):
 
 @bot.command()
 async def rollcall(ctx, *arg):
-    admin_role = discord.utils.get(ctx.guild.roles, name=os.getenv("LEAD_ROLE_NAME"))
-    if ctx.author == bot.user or (admin_role and admin_role not in ctx.author.roles) :
+    if not await is_authorized(ctx):
         return
 
     if len(arg) == 0:
         content = bot_messages.rollcall['base'] + bot_messages.rollcall['react']
         message = await ctx.send(content)
         await rollcall_react(message)
+
+async def is_authorized(ctx):
+    guild_id = str(ctx.guild.id)
+    
+    if ctx.author == ctx.guild.owner or (guild_id in authorized_roles and authorized_roles[guild_id] in ctx.author.roles):
+        return True
+    else:
+        content = bot_messages.forbidden['default']
+        if not guild_id in authorized_roles:
+            content = content + bot_messages.admin['not_set']
+        await ctx.send(content)
+        return False
 
 async def rollcall_react(message):
     for custom_emoji in role_emojis:

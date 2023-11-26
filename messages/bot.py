@@ -8,7 +8,8 @@ forbidden = {
 }
 
 admin = {
-    "set_admin_tag": "Lead role set to {}"
+    "set_admin_tag": "Lead role set to {}",
+    "not_set": "\nThe admin tag is not set. Please contact your server owner to fix this issue."
 }
 
 rollcall = {
