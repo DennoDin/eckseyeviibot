@@ -19,6 +19,14 @@ py -3 .\main_script.py
 ```
 
 ## Commands
+Commands are executed by typing the command with the `$` in the channel with bot.
+
+All commands can always be run by the server owner.
+
+#### $setAdminRole \<role id>
+Used for setting the role which can execute commands.
+Empty by default.
+
 #### $rollcall
 Used for starting roll call for the following week. By default does not include a time.
 Bot will automatically react with Tank, Healer, DPS, Question, and Cross emojis.
