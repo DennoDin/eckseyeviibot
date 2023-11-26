@@ -27,11 +27,14 @@ async def on_ready():
 @bot.command()
 async def setAdminRole(ctx, arg):
     if(ctx.author == ctx.guild.owner):
-        admin_name = arg.strip()
-        global authorized_roles
-        authorized_roles[ctx.guild.id] = admin_name
-        print(log_messages.admin['set_admin_tag'].format(admin_name))
-        await ctx.send(log_messages.admin['set_admin_tag'].format(admin_name))
+        new_admin_id = int(arg.strip())
+        if new_admin_id in [role.id for role in ctx.guild.roles]:
+            global authorized_roles
+            authorized_roles[ctx.guild.id] = new_admin_id
+            print(log_messages.admin['set_admin_tag'].format(new_admin_id))
+            await ctx.send(log_messages.admin['set_admin_tag'].format(ctx.guild.get_role(new_admin_id)))
+        else:
+            await ctx.send(bot_messages.admin['not_found'].format(new_admin_id))
     else:
         await ctx.send(bot_messages.forbidden['owner'].format(ctx.guild.owner))
 
@@ -46,9 +49,9 @@ async def rollcall(ctx, *arg):
         await rollcall_react(message)
 
 async def is_authorized(ctx):
-    guild_id = str(ctx.guild.id)
+    guild_id = ctx.guild.id
     
-    if ctx.author == ctx.guild.owner or (guild_id in authorized_roles and authorized_roles[guild_id] in ctx.author.roles):
+    if ctx.author == ctx.guild.owner or (guild_id in authorized_roles and authorized_roles[guild_id] in [role.id for role in ctx.author.roles]):
         return True
     else:
         content = bot_messages.forbidden['default']

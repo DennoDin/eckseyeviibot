@@ -9,6 +9,7 @@ forbidden = {
 
 admin = {
     "set_admin_tag": "Lead role set to {}",
+    "not_found": "Error: Role Id {} was not found in this server. Please check your input.",
     "not_set": "\nThe admin tag is not set. Please contact your server owner to fix this issue."
 }
 
